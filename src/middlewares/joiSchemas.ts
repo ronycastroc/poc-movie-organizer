@@ -13,6 +13,10 @@ const checkMovieSchema = joi.object({
   rating: joi.number().min(0).max(10).integer().required()
 });
 
+const platformGenreSchema = joi.object({
+  name: joi.string().min(2).max(30).required()
+});
+
 const validateMovie = async (req: Request, res: Response, next: NextFunction) => {
   const movie = req.body;
 
@@ -43,5 +47,20 @@ const validateCheckMovie = async (req: Request, res: Response, next: NextFunctio
   next();
 };
 
-export { validateMovie, validateCheckMovie };
+const validatePlatformGenre = async (req: Request, res: Response, next: NextFunction) => {
+  const platformGenre = req.body;
+
+  const validation = platformGenreSchema.validate(req.body, { abortEarly: false });
+
+  if (validation.error) {
+    const error = validation.error.details.map(value => value.message);
+
+    return res.status(httpStatus.UNPROCESSABLE_ENTITY).send(error);
+  }
+
+  res.locals.platformGenre = platformGenre;
+  next();
+};
+
+export { validateMovie, validateCheckMovie, validatePlatformGenre };
 
