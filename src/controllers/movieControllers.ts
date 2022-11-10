@@ -22,4 +22,16 @@ const insertMovie = async (req: Request, res: Response) => {
   }
 };
 
-export { insertMovie };
+const listMovies = async (req: Request, res: Response) => {
+
+  try {
+    const movies = await movieRepository.readMovies();
+
+    res.status(httpStatus.OK).send(movies.rows);
+
+  } catch (error) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
+  }
+}
+
+export { insertMovie, listMovies };

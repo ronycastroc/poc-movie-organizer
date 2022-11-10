@@ -19,4 +19,13 @@ const createMovie = async (movie: Movie): Promise<QueryResult<MovieEntity>> => {
       ($1, $2, $3);`, [movie.name, movie.platformId, movie.genreId]);
 }
 
-export { readMovie, createMovie };
+const readMovies = async (): Promise<QueryResult<MovieEntity>> => {
+  return connection.query(`
+    SELECT 
+      *
+    FROM
+      movie;
+  `);
+}
+
+export { readMovie, createMovie, readMovies };
