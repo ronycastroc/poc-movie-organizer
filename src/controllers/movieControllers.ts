@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as movieRepository from "../repositories/movieRepository.js"
-import { Movie } from "../protocols.js";
+import { Movie, MovieCheck } from "../protocols.js";
 import httpStatus from "http-status";
 
 const insertMovie = async (req: Request, res: Response) => {
@@ -18,7 +18,7 @@ const insertMovie = async (req: Request, res: Response) => {
     res.status(httpStatus.CREATED).send(`${result.rowCount} movie inserted sucessfull.`)
 
   } catch (error) {
-    res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
   }
 };
 
@@ -30,8 +30,32 @@ const listMovies = async (req: Request, res: Response) => {
     res.status(httpStatus.OK).send(movies.rows);
 
   } catch (error) {
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
+  }
+};
+
+const checkMovie = async (req: Request, res: Response) => {
+  const { movieId } = req.params;
+  const movieCheck = res.locals.movieCheck as MovieCheck;
+
+  try {
+    const isMovie = await movieRepository.readMovieById(Number(movieId));
+
+    if (isMovie.rowCount === 0) {
+      return res.sendStatus(httpStatus.BAD_REQUEST);
+    }
+
+    const result = await movieRepository.updateMovie(movieCheck, Number(movieId));
+
+    if (result.rowCount === 0) {
+      return res.sendStatus(httpStatus.BAD_REQUEST);
+    }
+
+    res.status(httpStatus.OK).send(`${result.rowCount} movie update successful.`);
+
+  } catch (error) {
     res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
   }
 }
 
-export { insertMovie, listMovies };
+export { insertMovie, listMovies, checkMovie };

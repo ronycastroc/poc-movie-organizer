@@ -10,7 +10,7 @@ const movieSchema = joi.object({
 
 const checkMovieSchema = joi.object({
   status: joi.string().valid('uncheck', 'check').required(),
-  rating: joi.number().min(1).max(10).integer().required()
+  rating: joi.number().min(0).max(10).integer().required()
 });
 
 const validateMovie = async (req: Request, res: Response, next: NextFunction) => {
@@ -28,5 +28,20 @@ const validateMovie = async (req: Request, res: Response, next: NextFunction) =>
   next();
 };
 
-export { validateMovie };
+const validateCheckMovie = async (req: Request, res: Response, next: NextFunction) => {
+  const movieCheck = req.body;
+
+  const validation = checkMovieSchema.validate(req.body, { abortEarly: false });
+
+  if (validation.error) {
+    const error = validation.error.details.map(value => value.message);
+
+    return res.status(httpStatus.UNPROCESSABLE_ENTITY).send(error);
+  }
+
+  res.locals.movieCheck = movieCheck;
+  next();
+};
+
+export { validateMovie, validateCheckMovie };
 
