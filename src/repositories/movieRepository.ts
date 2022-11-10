@@ -24,7 +24,9 @@ const readMovies = async (): Promise<QueryResult<MovieEntity>> => {
     SELECT 
       *
     FROM
-      movie;
+      movie
+    ORDER BY
+      id;
   `);
 };
 

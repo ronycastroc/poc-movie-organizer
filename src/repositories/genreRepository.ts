@@ -2,7 +2,7 @@ import { QueryResult } from "pg";
 import { connection } from "../database/db.js";
 import { PlatformGenreEntity, PlatformGenre } from "../protocols.js";
 
-const creatGenre = async (genre: PlatformGenre): Promise<QueryResult<PlatformGenreEntity>> => {
+const createGenre = async (genre: PlatformGenre): Promise<QueryResult<PlatformGenreEntity>> => {
   return connection.query(`
     INSERT INTO 
       genre (name) 
@@ -37,7 +37,7 @@ const updateGenre = async (genre: PlatformGenre, genreId: number): Promise<Query
 };
 
 export {
-  creatGenre,
+  createGenre,
   readGenres,
   readGenre,
   updateGenre

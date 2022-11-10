@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as platformRepository from "../repositories/platformRepository.js"
-import { PlatformGenre, PlatformGenreEntity } from "../protocols.js";
+import { PlatformGenre } from "../protocols.js";
 import httpStatus from "http-status";
 
 const insertPlatform = async (req: Request, res: Response) => {
@@ -13,7 +13,7 @@ const insertPlatform = async (req: Request, res: Response) => {
         return res.status(httpStatus.BAD_REQUEST).send(`The platform already exists.`);
       }
 
-    const result = await platformRepository.creatPlatform(platform);
+    const result = await platformRepository.createPlatform(platform);
     
     res.status(httpStatus.CREATED).send(`${result.rowCount} platform inserted sucessfull.`)
 
@@ -39,12 +39,6 @@ const changeNamePlatform = async (req: Request, res: Response) => {
   const platform = res.locals.platformGenre as PlatformGenre;
 
   try {
-    const isPlatform = await platformRepository.readPlatform(platform.name);
-    
-      if (isPlatform.rowCount === 0) {
-        return res.sendStatus(httpStatus.BAD_REQUEST);
-      }
-
     const result = await platformRepository.updatePlatform(platform, Number(platformId));
 
     if (result.rowCount === 0) {
