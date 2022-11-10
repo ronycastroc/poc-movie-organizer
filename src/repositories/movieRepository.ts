@@ -47,10 +47,18 @@ const updateMovie = async (movieCheck: MovieCheck, movieId: number): Promise<Que
       id = $3;`, [movieCheck.status, movieCheck.rating, movieId]);
 };
 
+const deleteMovieById = async (movieId: number): Promise<QueryResult<MovieEntity>> => {
+  return connection.query(`
+    DELETE FROM 
+      movie 
+    WHERE id = $1;`, [movieId]);
+};
+
 export { 
   readMovie, 
   createMovie, 
   readMovies, 
   updateMovie,
-  readMovieById 
+  readMovieById,
+  deleteMovieById 
 };

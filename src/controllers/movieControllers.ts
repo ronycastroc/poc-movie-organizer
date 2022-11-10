@@ -54,8 +54,36 @@ const checkMovie = async (req: Request, res: Response) => {
     res.status(httpStatus.OK).send(`${result.rowCount} movie update successful.`);
 
   } catch (error) {
-    res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
   }
-}
+};
 
-export { insertMovie, listMovies, checkMovie };
+const deleteMovie = async (req: Request, res: Response) => {
+  const { movieId } = req.params;
+
+  try {
+    const isMovie = await movieRepository.readMovieById(Number(movieId));
+
+    if (isMovie.rowCount === 0) {
+      return res.sendStatus(httpStatus.BAD_REQUEST);
+    }
+
+    const result = await movieRepository.deleteMovieById(Number(movieId));
+
+    if (result.rowCount === 0) {
+      return res.sendStatus(httpStatus.BAD_REQUEST);
+    }
+
+    res.status(httpStatus.OK).send(`${result.rowCount} movie deleted successful.`);
+
+  } catch (error) {
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
+  }
+};
+
+export { 
+  insertMovie, 
+  listMovies, 
+  checkMovie,
+  deleteMovie
+};
