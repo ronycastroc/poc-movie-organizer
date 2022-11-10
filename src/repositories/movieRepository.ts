@@ -54,11 +54,43 @@ const deleteMovieById = async (movieId: number): Promise<QueryResult<MovieEntity
     WHERE id = $1;`, [movieId]);
 };
 
+const readPlatformCount = async (): Promise<QueryResult> => {
+  return connection.query(`
+    SELECT
+      platform.id,
+      platform.name AS platform,
+      COUNT(platform.id) AS "movieCount"
+    FROM
+      platform
+      JOIN movie ON platform.id = movie."platformId"
+    GROUP BY
+      platform.id
+    ORDER BY
+      "movieCount" DESC;`);
+};
+
+const readGenreCount = async (): Promise<QueryResult> => {
+  return connection.query(`
+    SELECT
+      genre.id,
+      genre.name AS genre,
+      COUNT(genre.id) AS "movieCount"
+    FROM
+      genre
+      JOIN movie ON genre.id = movie."genreId"
+    GROUP BY
+      genre.id
+    ORDER BY
+      "movieCount" DESC;`);
+};
+
 export { 
   readMovie, 
   createMovie, 
   readMovies, 
   updateMovie,
   readMovieById,
-  deleteMovieById 
+  deleteMovieById,
+  readPlatformCount,
+  readGenreCount 
 };

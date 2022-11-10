@@ -81,9 +81,35 @@ const deleteMovie = async (req: Request, res: Response) => {
   }
 };
 
+const listPlatformCount = async (req: Request, res: Response) => {
+
+  try {
+    const platformCount = await movieRepository.readPlatformCount();
+
+    res.status(httpStatus.OK).send(platformCount.rows);
+
+  } catch (error) {
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
+  }
+};
+
+const listGenreCount = async (req: Request, res: Response) => {
+
+  try {
+    const genreCount = await movieRepository.readGenreCount();
+
+    res.status(httpStatus.OK).send(genreCount.rows);
+
+  } catch (error) {
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
+  }
+};
+
 export { 
   insertMovie, 
   listMovies, 
   checkMovie,
-  deleteMovie
+  deleteMovie,
+  listPlatformCount,
+  listGenreCount
 };
