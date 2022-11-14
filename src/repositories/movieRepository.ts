@@ -21,12 +21,19 @@ const readMovie = async (name: string): Promise<QueryResult<MovieEntity>> => {
 
 const readMovies = async (): Promise<QueryResult<MovieEntity>> => {
   return connection.query(`
-    SELECT 
-      *
-    FROM
-      movie
-    ORDER BY
-      id;
+  SELECT
+  movie.id,
+  movie.name,
+  platform.name AS "platformName",
+  genre.name AS "genreName",
+  movie.status,
+  movie.rating
+FROM
+  movie
+  JOIN platform ON movie."platformId" = platform.id
+  JOIN genre ON movie."genreId" = genre.id
+ORDER BY
+  id;
   `);
 };
 
